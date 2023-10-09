@@ -19,7 +19,7 @@ public class Controller {
 
 
     public String[][] getBoard(){
-        return Board.board;
+        return board.getBoard();
     }
 
     public boolean unitTaken(int r, int c){
@@ -44,12 +44,15 @@ public class Controller {
         else{
             String symbol = ruleEngine.playerSymbol().get(ruleEngine.getPlayerTurn());
 
-            if(!ruleEngine.isGameover() && !unitTaken(_r, _c)) {
+            if(!ruleEngine.isGameOver() && !unitTaken(_r, _c)) {
                 board.updateBoard(_r, _c, symbol);
                 ruleEngine.updatePlayerTurn();
-                int winner = ruleEngine.getWinner(board.getBoard()) + 1;
-                if (winner > 0) {
-                    view.updateViewLable("Player " + winner + " is the winner");
+                int winner = ruleEngine.getWinner(board.getBoard()) + 1 ;
+                if ( winner > 0) {
+                    if(winner > 2) { // Draw
+                        view.updateViewLable("Draw");
+                    }
+                    else view.updateViewLable("Player " + winner + " is the winner");
                 }
                 else view.updateViewLable("Player " + (ruleEngine.getPlayerTurn() + 1) + "'s turn");
                 view.updateViewBoard(_r, _c, symbol);
@@ -62,11 +65,11 @@ public class Controller {
     }
 
     public int getRows(){
-        return board.rows;
+        return board.getRows();
     }
 
     public int getCols(){
-        return board.cols;
+        return board.getCols();
     }
 
     public void createBoard(int r, int c){

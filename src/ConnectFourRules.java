@@ -101,11 +101,6 @@ public class ConnectFourRules implements GameRules {
     }
 
     @Override
-    public int getPlayers() {
-        return players;
-    }
-
-    @Override
     public boolean isGameOver() {
         return isGameOver;
     }

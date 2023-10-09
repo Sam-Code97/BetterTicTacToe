@@ -8,7 +8,7 @@ public class RuleEngine {
         controller = new Controller(this);
     }
 
-    public void choseGame(GameType gameType) {
+    public void choseGame(GameType gameType) { //gameE
         switch(gameType) {
             case TIC_TAC_TOE:
                 currentGameRules = new TicTacToeRules();
@@ -44,7 +44,7 @@ public class RuleEngine {
         currentGameRules.updatePlayerTurn();
     }
 
-    public boolean isGameover() {
+    public boolean isGameOver() {
         return currentGameRules.isGameOver();
     }
 

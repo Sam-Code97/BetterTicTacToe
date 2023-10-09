@@ -3,15 +3,12 @@ import java.util.Stack;
 
 public class TicTacToeRules implements GameRules{
 
-    private int rows;
-    private int cols;
+    private int rows = 6;
+    private int cols = 3;
     private HashMap<Integer, String> playerSymbol;
     private int players;
     private int playerTurn;
     private boolean isGameOver;
-
-
-    public String[][] board;
 
 
     public TicTacToeRules() {
@@ -19,8 +16,6 @@ public class TicTacToeRules implements GameRules{
     }
     @Override
     public void initializeGame() {
-        rows = 3;
-        cols = 3;
 
         playerSymbol = new HashMap<>();
         playerSymbol.put(0, "O");
@@ -34,26 +29,80 @@ public class TicTacToeRules implements GameRules{
     public void updatePlayerTurn(){
         playerTurn = (playerTurn + 1) % players;
     }
+
+
+    /**
+     * Checks the game board for a winning condition.
+     * @param board The current game board.
+     * @return The index of the winning player or -1 if no winner.
+     */
     @Override
-    public int getWinner(String[][] board1){
+    public int getWinner(String[][] board1) {
         int winner = -1;
 
-        for(int player : playerSymbol.keySet()) {
+        for (int player : playerSymbol.keySet()) {
             String symbol = playerSymbol.get(player);
 
-            for (int i = 0; i < 3; i++) {
-                if (board1[i][0] == symbol && board1[i][1] == symbol && board1[i][2] == symbol ||   // check verticals
-                        board1[0][i] == symbol && board1[1][i] == symbol && board1[2][i] == symbol)     // check horizontal
+            // Check verticals and horizontals
+            for (int r = 0; r < rows; r++) {
+                boolean verticalWin = true;
+                boolean horizontalWin = true;
+                //int temp = rows;
+                //rows = cols;
+                //cols = temp;
+                for (int c = 0; c < cols; c++) {
+                    if (board1[r][c] == null || !board1[r][c].equals(symbol)) {
+                        verticalWin = false;
+                    }
+                    if (board1[c][r] == null || !board1[c][r].equals(symbol)) {
+                        horizontalWin = false;
+                    }
+                }
+                if (verticalWin || horizontalWin) {
                     winner = player;
+                    break;
+                }
             }
-            if (board1[0][0] == symbol && board1[1][1] == symbol && board1[2][2] == symbol ||       // check diagonal
-                    board1[0][2] == symbol && board1[1][1] == symbol && board1[2][0] == symbol)
-                winner = player;
-        }
-        if(winner >= 0) isGameOver = true;
-        return winner;
-    };
 
+            // Check diagonals
+            boolean leftDiagonalWin = true;
+            boolean rightDiagonalWin = true;
+            for (int i = 0; i < rows; i++) {
+                if (board1[i][i] == null || !board1[i][i].equals(symbol)) {
+                    leftDiagonalWin = false;
+                }
+                if (board1[i][(cols - 1 - i)] == null || !board1[i][cols - 1 - i].equals(symbol)) {
+                    rightDiagonalWin = false;
+                }
+            }
+            if (leftDiagonalWin || rightDiagonalWin) {
+                winner = player;
+                break;
+            }
+        }
+
+        // If no winner, check for draw
+        if (winner == -1 && isDraw(board1)) {
+            winner = 3; // Assuming 3 indicates a draw
+        }
+
+        if (winner >= 0) isGameOver = true;
+        return winner;
+    }
+
+    public boolean isDraw(String[][] board1){
+        boolean isDraw = true;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (board1[r][c] == null) { // Assuming empty cells are null or empty strings
+                    isDraw = false;
+                    break;
+                }
+            }
+            if (!isDraw) break;
+        }
+        return isDraw;
+    }
 
     // Getters and setters for the member variables
     public int getBoardRows(){
@@ -62,9 +111,6 @@ public class TicTacToeRules implements GameRules{
 
     public int getBoardCols(){
         return cols;
-    }
-    public int getPlayers() {
-        return players;
     }
 
     public int getPlayerTurn() {

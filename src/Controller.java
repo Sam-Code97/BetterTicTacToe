@@ -2,15 +2,15 @@ import java.util.Objects;
 
 public class Controller {
 
-    private final RuleEngine ruleEngine;
+    private final GameEngine gameEngine;
     private final View view;
     private final Board board;
     public GameType gameType;
     static boolean gameStarted;
 
 
-    Controller(RuleEngine _ruleEngine){
-        ruleEngine = _ruleEngine;
+    Controller(GameEngine _gameEngine){
+        gameEngine = _gameEngine;
         gameStarted = false;
         board = new Board(this);
         board.initializeBoard(1, 1);
@@ -24,9 +24,9 @@ public class Controller {
 
     public boolean unitTaken(int r, int c){
         String[][] _board = getBoard();
-        for(int i=0; i<ruleEngine.playerSymbol().size(); i++) {
+        for(int i = 0; i< gameEngine.playerSymbol().size(); i++) {
             System.out.println("r: " + r + ", c: " + c + ", _board.length: " + _board.length );
-            if (Objects.equals(_board[r][c], ruleEngine.playerSymbol().get(i))) {
+            if (Objects.equals(_board[r][c], gameEngine.playerSymbol().get(i))) {
                 return true;
             }
         }
@@ -36,25 +36,25 @@ public class Controller {
     public void unitClicked(int _r,int _c){
         if(!gameStarted){
             gameType = gameChoice(_r);
-            ruleEngine.choseGame(gameType);
+            gameEngine.choseGame(gameType);
             gameStarted = true;
-            view.viewFrame(ruleEngine.getBoardRows(), ruleEngine.getBoardCols());
+            view.viewFrame(gameEngine.getBoardRows(), gameEngine.getBoardCols());
 
         }
         else{
-            String symbol = ruleEngine.playerSymbol().get(ruleEngine.getPlayerTurn());
+            String symbol = gameEngine.playerSymbol().get(gameEngine.getPlayerTurn());
 
-            if(!ruleEngine.isGameOver() && !unitTaken(_r, _c)) {
+            if(!gameEngine.isGameOver() && !unitTaken(_r, _c)) {
                 board.updateBoard(_r, _c, symbol);
-                ruleEngine.updatePlayerTurn();
-                int winner = ruleEngine.getWinner(board.getBoard()) + 1 ;
+                gameEngine.updatePlayerTurn();
+                int winner = gameEngine.getWinner(board.getBoard(), _r, _c) + 1 ;
                 if ( winner > 0) {
                     if(winner > 2) { // Draw
                         view.updateViewLable("Draw");
                     }
                     else view.updateViewLable("Player " + winner + " is the winner");
                 }
-                else view.updateViewLable("Player " + (ruleEngine.getPlayerTurn() + 1) + "'s turn");
+                else view.updateViewLable("Player " + (gameEngine.getPlayerTurn() + 1) + "'s turn");
                 view.updateViewBoard(_r, _c, symbol);
             }
         }

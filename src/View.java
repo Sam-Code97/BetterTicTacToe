@@ -68,7 +68,7 @@ public class View extends JFrame {
                 final int _r = r;
                 final int _c = c;
                 JButton button = buttons[r][c] = new JButton();
-                button.setPreferredSize(new Dimension(300, 150));
+                button.setPreferredSize(new Dimension(250, 100));
                 //If game didn't start set buttons to game names
                 button.setText(!controller.gameStarted? controller.gameType.values()[r].name() : null);
                 // Set font size

@@ -28,6 +28,4 @@ public class Board {
     public int getCols(){
         return cols;
     }
-
-
 }

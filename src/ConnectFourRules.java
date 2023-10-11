@@ -9,7 +9,6 @@ public class ConnectFourRules implements GameRules {
     private int players;
     private int playerTurn;
     private boolean isGameOver;
-    private boolean islegalMove;
 
     public ConnectFourRules() {
         initializeGame();
@@ -24,11 +23,11 @@ public class ConnectFourRules implements GameRules {
         players = 2;
         playerTurn = 0;
         isGameOver = false;
-        islegalMove = false;
+
     }
 
     @Override
-    public int getWinner(String[][] board) {
+    public int getWinner(String[][] board, int row, int col) {
         // Check for 4 in a row, column, or diagonal
         int winner = -1;
         for (int r = 0; r < ROWS; r++) {

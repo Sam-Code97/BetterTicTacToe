@@ -1,10 +1,9 @@
 import java.util.HashMap;
-import java.util.Stack;
 
 public class TicTacToeRules implements GameRules{
 
-    private int rows = 6;
-    private int cols = 3;
+    private static final int ROWS = 6;
+    private static final int COLS = 3;
     private HashMap<Integer, String> playerSymbol;
     private int players;
     private int playerTurn;
@@ -37,64 +36,53 @@ public class TicTacToeRules implements GameRules{
      * @return The index of the winning player or -1 if no winner.
      */
     @Override
-    public int getWinner(String[][] board1) {
-        int winner = -1;
+    public int getWinner(String[][] board, int clickedRow, int clickedCol) {
+        int winner = -1; // indicates no winner yet
 
-        for (int player : playerSymbol.keySet()) {
+        for (int player : playerSymbol.keySet()) { // loops through the chosen symbols
             String symbol = playerSymbol.get(player);
 
-            // Check verticals and horizontals
-            for (int r = 0; r < rows; r++) {
-                boolean verticalWin = true;
-                boolean horizontalWin = true;
-                //int temp = rows;
-                //rows = cols;
-                //cols = temp;
-                for (int c = 0; c < cols; c++) {
-                    if (board1[r][c] == null || !board1[r][c].equals(symbol)) {
-                        verticalWin = false;
-                    }
-                    if (board1[c][r] == null || !board1[c][r].equals(symbol)) {
-                        horizontalWin = false;
-                    }
-                }
-                if (verticalWin || horizontalWin) {
+            // Check horizontal
+            for (int c = Math.max(0, clickedCol - 2); c <= Math.min(COLS - 3, clickedCol); c++) {
+                if (board[clickedRow][c] == symbol && board[clickedRow][c + 1] == symbol && board[clickedRow][c + 2] == symbol) {
                     winner = player;
+                    isGameOver = true;
                     break;
                 }
             }
 
-            // Check diagonals
-            boolean leftDiagonalWin = true;
-            boolean rightDiagonalWin = true;
-            for (int i = 0; i < rows; i++) {
-                if (board1[i][i] == null || !board1[i][i].equals(symbol)) {
-                    leftDiagonalWin = false;
-                }
-                if (board1[i][(cols - 1 - i)] == null || !board1[i][cols - 1 - i].equals(symbol)) {
-                    rightDiagonalWin = false;
+            // Check vertical
+            for (int r = Math.max(0, clickedRow - 2); r <= Math.min(ROWS - 3, clickedRow); r++) {
+                if (board[r][clickedCol] == symbol && board[r + 1][clickedCol] == symbol && board[r + 2][clickedCol] == symbol) {
+                    winner = player;
+                    isGameOver = true;
+                    break;
                 }
             }
-            if (leftDiagonalWin || rightDiagonalWin) {
-                winner = player;
-                break;
+            // Check diagonals (only for 3x3 board)
+            if (ROWS == 3 && COLS == 3) {
+                if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol ||
+                        board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+                    winner = player;
+                    isGameOver = true;
+                    break;
+                }
             }
+            if (isGameOver) break;
         }
-
-        // If no winner, check for draw
-        if (winner == -1 && isDraw(board1)) {
-            winner = 3; // Assuming 3 indicates a draw
+        // Check for draw
+        if (winner == -1 && isDraw(board)) {
+            winner = 3; // 3 indicates a draw
         }
-
-        if (winner >= 0) isGameOver = true;
         return winner;
     }
 
     public boolean isDraw(String[][] board1){
         boolean isDraw = true;
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (board1[r][c] == null) { // Assuming empty cells are null or empty strings
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                // if at least one cell is empty. This is no draw
+                if (board1[r][c] == null) {
                     isDraw = false;
                     break;
                 }
@@ -106,11 +94,11 @@ public class TicTacToeRules implements GameRules{
 
     // Getters and setters for the member variables
     public int getBoardRows(){
-        return rows;
+        return ROWS;
     }
 
     public int getBoardCols(){
-        return cols;
+        return COLS;
     }
 
     public int getPlayerTurn() {

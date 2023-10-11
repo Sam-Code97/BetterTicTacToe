@@ -1,14 +1,14 @@
 import java.util.HashMap;
 
-public class RuleEngine {
+public class GameEngine {
     private final Controller controller;
     private GameRules currentGameRules;
 
-    RuleEngine(){
+    GameEngine(){
         controller = new Controller(this);
     }
 
-    public void choseGame(GameType gameType) { //gameE
+    public void choseGame(GameType gameType) {
         switch(gameType) {
             case TIC_TAC_TOE:
                 currentGameRules = new TicTacToeRules();
@@ -18,7 +18,7 @@ public class RuleEngine {
                  currentGameRules = new ConnectFourRules();
                 createBoard(currentGameRules.getBoardRows(), currentGameRules.getBoardCols());/////
                  break;
-            // case CHESS:
+            // case CHESS:  // here, I can add more games
             //     currentGameRules = new ChessRules();
             //     break;
             default:
@@ -32,8 +32,8 @@ public class RuleEngine {
         controller.createBoard(r, c);
     }
 
-    public int getWinner(String[][] board){
-        return currentGameRules.getWinner(board);
+    public int getWinner(String[][] board, int clickedRow, int clickedCol){
+        return currentGameRules.getWinner(board, clickedRow, clickedCol);
     }
 
     public int getPlayerTurn(){
